@@ -93,11 +93,6 @@ std::ostream& operator<<(std::ostream& os, const LinkedList<ElementType>& list) 
 }
 
 template<typename ElementType>
-void LinkedList<ElementType>::RemoveNth(int n) {
-
-}
-
-template<typename ElementType>
 void LinkedList<ElementType>::RemoveOdd() {
 
 }
