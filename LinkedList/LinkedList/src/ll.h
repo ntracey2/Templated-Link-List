@@ -17,6 +17,15 @@ class LinkedList {
   /*
    *  Declare any struct, class, or enum types you need to use here
    */
+private:
+	struct LinkedListNode {
+		LinkedListNode(ElementType d);
+
+		ElementType data;
+		LinkedListNode *next;
+	};
+
+	LinkedListNode *head;
 
 public:
     LinkedList();                                                   // Default constructor
