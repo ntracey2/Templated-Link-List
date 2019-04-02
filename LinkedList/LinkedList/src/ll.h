@@ -27,6 +27,8 @@ private:
 
 	LinkedListNode *head;
 
+	bool clear_helper(LinkedListNode *n);
+
 public:
     LinkedList();                                                   // Default constructor
     explicit LinkedList(const std::vector<ElementType> &values);    // Initilize from vector
@@ -83,7 +85,7 @@ template<typename ElementType>
 std::ostream& operator<<(std::ostream& os, const LinkedList<ElementType>& list);
 
 // needed for template instantiation
-#include "ll.hpp"
+#include "src/ll.hpp"
 
 } // namespace cs126linkedlist
 #endif //LL_H
