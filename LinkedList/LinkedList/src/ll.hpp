@@ -2,7 +2,7 @@
 #include <cassert>
 #include "src/ll.h"
 
-using cs126linkedlist::LinkedList;
+using namespace cs126linkedlist;
 
 template<typename ElementType>
 LinkedList<ElementType>::LinkedListNode::LinkedListNode(ElementType d) {
@@ -26,13 +26,19 @@ LinkedList<ElementType>::LinkedList(const std::vector<ElementType> &values) {
 // Copy constructor
 template<typename ElementType>
 LinkedList<ElementType>::LinkedList(const LinkedList<ElementType>& source) {
-
+	this->head = NULL;
+	if (!source.empty()) {
+		for (auto itr = source.begin(); itr != source.end(); ++itr) {
+			this->push_back(*itr);
+		}
+	}
 }
 
 // Move constructor
 template<typename ElementType>
 LinkedList<ElementType>::LinkedList(LinkedList<ElementType>&& source) noexcept {
-
+	this->head = source.head;
+	source.head = NULL;
 }
 
 // Destructor
@@ -45,13 +51,21 @@ LinkedList<ElementType>::~LinkedList() {
 // Copy assignment operator
 template<typename ElementType>
 LinkedList<ElementType>& LinkedList<ElementType>::operator= (const LinkedList<ElementType>& source) {
-
+	this->clear();
+	if (!source.empty()) {
+		for (auto itr = source.begin(); itr != source.end(); ++itr) {
+			this->push_back(*itr);
+		}
+	}
+	return *this;
 }
 
 // Move assignment operator
 template<typename ElementType>
 LinkedList<ElementType>& LinkedList<ElementType>::operator= (LinkedList<ElementType>&& source) noexcept {
-
+	this->head = source.head;
+	source.head = NULL;
+	return *this;
 }
 
 template<typename ElementType>
@@ -129,8 +143,8 @@ int LinkedList<ElementType>::size() const {
 	}
 
 	int s = 0;
-	LinkedList<ElementType>::const_iterator itr = this->begin();
-	for (; itr != this->end(); ++itr) {
+	//LinkedList<ElementType>::const_iterator itr = this->begin();
+	for (auto itr = this->begin(); itr != this->end(); ++itr) {
 		s++;
 	}
 
@@ -148,6 +162,9 @@ bool LinkedList<ElementType>::empty() const {
 
 template<typename ElementType>
 bool LinkedList<ElementType>::clear_helper(LinkedListNode *n) {
+	if (n == NULL) {
+		return true;
+	}
 	if (n->next == NULL) {
 		return true;
 	}
@@ -169,12 +186,13 @@ void LinkedList<ElementType>::clear() {
 
 template<typename ElementType>
 std::ostream& operator<<(std::ostream& os, const LinkedList<ElementType>& list) {
-	/*LinkedList<ElementType>::const_iterator itr = list.begin();
-	for (; itr != list->end(); ++itr) {
-		os << *itr << " -> ";
+	if (!list.empty()) {
+		for (auto itr = list.begin(); itr != list.end(); ++itr) {
+			os << (*itr) << " -> ";
+		}
 	}
 	os << "NULL";
-	return os;*/
+	return os;
 }
 
 template<typename ElementType>
@@ -200,12 +218,32 @@ void LinkedList<ElementType>::RemoveOdd() {
 
 template<typename ElementType>
 bool LinkedList<ElementType>::operator==(const LinkedList<ElementType> &rhs) const {
+	
+	if (size() != rhs.size()) {
+		return false;
+	}
+	if (empty() && rhs.empty()) {
+		return true;
+	}
 
+	auto itr1 = rhs.begin();
+	for (auto itr2 = begin(); itr2 != end(); ++itr2) {
+		if (*itr1 != *itr2) {
+			return false;
+		}
+		++itr1;
+	}
+
+	return true;
 }
 
 template<typename ElementType>
-bool operator!=(const LinkedList<ElementType>& lhs, const LinkedList<ElementType> &rhs) {
-
+bool operator!=(const LinkedList<ElementType>& lhs, const LinkedList<ElementType>& rhs) {
+	if (lhs == rhs) {
+		return false;
+	} else {
+		return true;
+	}
 }
 
 template<typename ElementType>
@@ -259,8 +297,7 @@ template<typename ElementType>
 bool LinkedList<ElementType>::const_iterator::operator!=(const LinkedList<ElementType>::const_iterator& other) const {
 	if (this->current_ != other.current_) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }

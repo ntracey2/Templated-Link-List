@@ -84,6 +84,9 @@ public:
 template<typename ElementType>
 std::ostream& operator<<(std::ostream& os, const LinkedList<ElementType>& list);
 
+template<typename ElementType>
+bool operator!=(const LinkedList<ElementType>& lhs, const LinkedList<ElementType>& rhs);
+
 // needed for template instantiation
 #include "src/ll.hpp"
 

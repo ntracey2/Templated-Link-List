@@ -3,7 +3,7 @@
 #include "catch.hpp"
 #include "src/ll.h"
 
-using cs126linkedlist::LinkedList;
+using namespace cs126linkedlist;
 
 TEST_CASE("Add node to front of list: push_front()") {
 	LinkedList<int> *list = new LinkedList<int>();
@@ -193,6 +193,7 @@ TEST_CASE("Remove odd elements from list") {
 	}
 }
 
+
 TEST_CASE("Display printing") {
 	LinkedList<int> *list = new LinkedList<int>();
 
@@ -202,6 +203,143 @@ TEST_CASE("Display printing") {
 	list->push_front(0);
 	list->push_front(-1);
 
-	std::cout << list << std::endl;
+	std::cout << *list << std::endl;
 }
 
+TEST_CASE("== operator") {
+	LinkedList<std::string> *list1 = new LinkedList<std::string>();
+	LinkedList<std::string> *list2 = new LinkedList<std::string>();
+
+	SECTION("Two empty lists") {
+		REQUIRE(*list1 == *list2);
+	}
+	SECTION("Two equal populated lists") {
+		list1->push_back("first");
+		list1->push_back("second");
+		list1->push_back("third");
+
+		list2->push_front("third");
+		list2->push_front("second");
+		list2->push_front("first");
+
+		REQUIRE(*list1 == *list2);
+	}
+	SECTION("Two unequal populated lists") {
+		list1->push_back("first");
+		list1->push_back("fifth");
+		list1->push_back("third");
+
+		list2->push_front("third");
+		list2->push_front("second");
+		list2->push_front("first");
+
+		REQUIRE(!(*list1 == *list2));
+	}
+	SECTION("Two lists of different lengths") {
+		list1->push_back("first");
+		list1->push_back("second");
+		list1->push_back("third");
+		list1->push_back("fourth");
+
+		list2->push_front("third");
+		list2->push_front("second");
+		list2->push_front("first");
+
+		REQUIRE(!(*list1 == *list2));
+	}
+}
+
+TEST_CASE("!= operator") {
+	LinkedList<std::string> *list1 = new LinkedList<std::string>();
+	LinkedList<std::string> *list2 = new LinkedList<std::string>();
+
+	SECTION("Two empty lists") {
+		REQUIRE(!(*list1 != *list2));
+	}
+	SECTION("Two equal populated lists") {
+		list1->push_back("first");
+		list1->push_back("second");
+		list1->push_back("third");
+
+		list2->push_front("third");
+		list2->push_front("second");
+		list2->push_front("first");
+
+		REQUIRE(!(*list1 != *list2));
+	}
+	SECTION("Two unequal populated lists") {
+		list1->push_back("first");
+		list1->push_back("fifth");
+		list1->push_back("third");
+
+		list2->push_front("third");
+		list2->push_front("second");
+		list2->push_front("first");
+
+		REQUIRE((*list1 != *list2));
+	}
+	SECTION("Two lists of different lengths") {
+		list1->push_back("first");
+		list1->push_back("second");
+		list1->push_back("third");
+		list1->push_back("fourth");
+
+		list2->push_front("third");
+		list2->push_front("second");
+		list2->push_front("first");
+
+		REQUIRE((*list1 != *list2));
+	}
+}
+
+TEST_CASE("Copy constructor") {
+	LinkedList<char> *list = new LinkedList<char>();
+	SECTION("Populated list") {
+		list->push_back('a');
+		list->push_back('b');
+		list->push_back('c');
+
+		LinkedList<char> *copy = new LinkedList<char>(*list);
+		REQUIRE(*copy == *list);
+	}
+	SECTION("Empty list") {
+		LinkedList<char> *copy = new LinkedList<char>(*list);
+		REQUIRE(*copy == *list);
+	}
+	SECTION("Single value list") {
+		list->push_back('a');
+		LinkedList<char> *copy = new LinkedList<char>(*list);
+		REQUIRE(*copy == *list);
+	}
+}
+
+TEST_CASE("= assignment constructor") {
+	LinkedList<char> *list = new LinkedList<char>();
+	SECTION("Populated list") {
+		list->push_back('a');
+		list->push_back('b');
+		list->push_back('c');
+
+		LinkedList<char> copy;
+		copy = *list;
+		REQUIRE(copy == *list);
+	}
+	SECTION("Empty list") {
+		LinkedList<char> copy;
+		copy = *list;
+		REQUIRE(copy == *list);
+	}
+}
+
+TEST_CASE("= move assignment operator") {
+	LinkedList<int> *l1 = new LinkedList<int>();
+	
+	l1->push_back(1);
+	l1->push_back(2);
+	LinkedList<int> comp = *l1;
+
+	LinkedList<int> l2 = std::move(*l1);
+
+	REQUIRE(l1->empty());
+	REQUIRE(l2 == comp);
+}
